@@ -1,9 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
-    maven{
+    maven {
         url 'https://github.com/maomaoliu/mvn-repo/raw/master'
     }
 }
@@ -16,6 +17,23 @@ task run(dependsOn: 'build') << {
     )
 }
 
+test.doFirst {
+    tasks.clean.execute()
+    jettyRun.daemon = true
+    tasks.jettyRun.execute()
+}
+
+test.doLast {
+    tasks.jettyStop.execute()
+}
+
+[jettyRun, jettyStop]*.stopPort = 10190
+[jettyRun, jettyStop]*.stopKey = 'noam'
+
+jettyRun {
+    httpPort 10190
+}
+
 sourceSets {
     functional {
         compileClasspath = sourceSets.main.output + configurations.testRuntime
@@ -25,9 +43,10 @@ sourceSets {
 
 dependencies {
     compile 'log4j:log4j:1.2.16',
-            group: 'com.google.guava', name: 'guava', version: '14.0',
+            'com.google.guava:guava:14.0',
             'noam:noam-ioc:0.1'
     testCompile 'junit:junit:4.8.1',
             'org.mockito:mockito-all:1.9.0',
+            'org.seleniumhq.selenium.fluent:fluent-selenium:1.6.3',
             'noam:noam-ioc:0.1'
 }
