@@ -1,4 +1,4 @@
-package com.thoughtworks.maomao.web;
+package com.thoughtworks.maomao.integration_test;
 
 
 import com.thoughtworks.maomao.browser.Browser;

@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <div>
+            <h2>$book.name$</h2>
+            <h3>$book.author$</h3>
+            <div></div>
+            <ul>
+                $book.comments: { comment |
+                    <li>$comment.content$</li>
+                }$
+            </ul>
+        </div>
+    </body>
+</html>

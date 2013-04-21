@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <div>
+            <ul>
+                $books: { book |
+                    <div>
+                        <h2><a href="$contextPath$/book?id=$book.id$">$book.name$</a></h2>
+                        <h3>$book.author$</h3>
+                        <a href="$contextPath$/book?id=$book.id$&method=delete">Delete</a>
+                    </div>
+                }$
+            </ul>
+        </div>
+    </body>
+</html>

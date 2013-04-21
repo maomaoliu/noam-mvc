@@ -1,37 +1,27 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
     maven {
         url 'https://github.com/maomaoliu/mvn-repo/raw/master'
+//        url "file://$buildDir/../../mvn-repo"
     }
 }
 
-task run(dependsOn: 'build') << {
-    ant.java(
-            classname: '',
-            fork: true,
-            classpath: "${sourceSets.main.runtimeClasspath.asPath}"
-    )
+def httpPort = 10190
+
+task jettyRun(dependsOn: 'copyST', type: JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    main 'com.thoughtworks.maomao.browser.WebServer'
+    args httpPort, "src/test/webapp", "/noam-mvc"
 }
 
-test.doFirst {
-    tasks.clean.execute()
-    jettyRun.daemon = true
-    tasks.jettyRun.execute()
-}
-
-test.doLast {
-    tasks.jettyStop.execute()
-}
-
-[jettyRun, jettyStop]*.stopPort = 10190
-[jettyRun, jettyStop]*.stopKey = 'noam'
-
-jettyRun {
-    httpPort 10190
+task copyST(type: Copy) {
+    from 'src/test/java/'
+    into 'build/classes/test/'
+    include '**/*.stg'
+    include '**/*.st'
 }
 
 sourceSets {
@@ -45,9 +35,12 @@ dependencies {
     compile 'log4j:log4j:1.2.16',
             'com.google.guava:guava:14.0',
             'javax.servlet:javax.servlet-api:3.0.1',
-            'noam:noam-ioc:0.1'
-    testCompile 'junit:junit:4.8.1',
+            'noam:noam-ioc:0.11',
+            'org.antlr:ST4:4.0.7'
+    testCompile 'org.eclipse.jetty:jetty-server:9.0.0.M5',
+            'org.eclipse.jetty:jetty-webapp:9.0.0.M5',
+            'junit:junit:4.8.1',
             'org.mockito:mockito-all:1.9.0',
-            'org.seleniumhq.selenium.fluent:fluent-selenium:1.6.3',
-            'noam:noam-ioc:0.1'
+            'org.seleniumhq.selenium.fluent:fluent-selenium:1.6.3'
 }
+
