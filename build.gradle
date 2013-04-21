@@ -39,6 +39,7 @@ dependencies {
             'org.antlr:ST4:4.0.7'
     testCompile 'org.eclipse.jetty:jetty-server:9.0.0.M5',
             'org.eclipse.jetty:jetty-webapp:9.0.0.M5',
+            'org.eclipse.jetty:jetty-client:9.0.0.M5',
             'junit:junit:4.8.1',
             'org.mockito:mockito-all:1.9.0',
             'org.seleniumhq.selenium.fluent:fluent-selenium:1.6.3'
