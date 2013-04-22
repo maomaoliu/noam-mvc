@@ -11,18 +11,13 @@ repositories {
 
 def httpPort = 10190
 
-task jettyRun(dependsOn: 'copyST', type: JavaExec) {
+task jettyRun(gittype: JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     main 'com.thoughtworks.maomao.browser.WebServer'
     args httpPort, "src/test/webapp", "/noam-mvc"
 }
 
-task copyST(type: Copy) {
-    from 'src/test/java/'
-    into 'build/classes/test/'
-    include '**/*.stg'
-    include '**/*.st'
-}
+sourceSets.test.resources.srcDir 'src/test/java'
 
 sourceSets {
     functional {
