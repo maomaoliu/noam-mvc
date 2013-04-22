@@ -30,6 +30,9 @@ public abstract class NoamController extends HttpServlet {
             String methodParameter = req.getParameter("method");
             if (methodParameter != null && "delete".equals(methodParameter.toLowerCase())) {
                 _delete(Integer.parseInt(req.getParameter("id")), req, resp, params);
+            } else if (methodParameter != null && "create".equals(methodParameter.toLowerCase())) {
+
+                _create(req, resp, params);
             } else {
                 if (req.getPathInfo().endsWith(nameResolver.getSingularPath())) {
                     _show(Integer.parseInt(req.getParameter("id")), req, resp, params);
@@ -38,8 +41,11 @@ public abstract class NoamController extends HttpServlet {
                 }
             }
         } else if (method.equals(METHOD_POST)) {
-            doPost(req, resp);
-
+            String methodParameter = req.getParameter("method");
+            if("create".equals(methodParameter.toLowerCase())){
+                String redirectURL = _doSave(req, resp, params);
+                resp.sendRedirect(redirectURL);
+            }
         } else if (method.equals(METHOD_PUT)) {
             doPut(req, resp);
 
@@ -49,6 +55,10 @@ public abstract class NoamController extends HttpServlet {
         } else {
             resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "http.method_not_implemented");
         }
+    }
+
+    private String _doSave(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        return doSave(req, resp, params);
     }
 
     private void render(String viewTemplate, HttpServletResponse response, Map<String, Object> map) throws IOException {
@@ -81,8 +91,10 @@ public abstract class NoamController extends HttpServlet {
         resp.sendRedirect(params.get(CONTEXT_PATH) + nameResolver.getPluralPath());
     }
 
-    private void _create(Object instance) {
-
+    private void _create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) throws IOException {
+        Object object = create(req, resp, params);
+        params.put(nameResolver.getSingular(), object);
+        render(nameResolver.getCreateView(), resp, params);
     }
 
     public List index(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
@@ -101,7 +113,12 @@ public abstract class NoamController extends HttpServlet {
 
     }
 
-    public void create(Object instance) {
-
+    public Object create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        return null;
     }
+
+    public String doSave(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        return null;
+    }
+
 }

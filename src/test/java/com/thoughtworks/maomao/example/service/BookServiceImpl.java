@@ -50,4 +50,11 @@ public class BookServiceImpl implements BookService {
     public List<Book> getAllBooks() {
         return new ArrayList<Book>(books.values());
     }
+
+    @Override
+    public Book save(Book book) {
+        book.setId(books.size() + 1);
+        books.put(book.getId(), book);
+        return book;
+    }
 }

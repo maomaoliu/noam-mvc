@@ -44,7 +44,10 @@ public class NoamFilter implements Filter {
         if (servlet != null) {
             servlet.service(request, response);
         }
-        chain.doFilter(request, response);
+
+        if(((HttpServletRequest) request).getMethod()=="GET"){
+            chain.doFilter(request, response);
+        }
     }
 
     @Override

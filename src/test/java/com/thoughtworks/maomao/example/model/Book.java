@@ -8,6 +8,11 @@ public class Book {
     private String author;
     private List<Comment> comments;
 
+    public Book() {
+        name = "";
+        author = "";
+    }
+
     public Book(String name, String author) {
         this.name = name;
         this.author = author;

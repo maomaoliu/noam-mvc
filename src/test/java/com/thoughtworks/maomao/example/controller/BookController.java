@@ -33,6 +33,18 @@ public class BookController extends NoamController {
         bookService.deleteBook(id);
     }
 
+    @Override
+    public Object create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        return new Book();
+    }
+
+    @Override
+    public String doSave(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        Book book = bookService.save(new Book(req.getParameter("name"), req.getParameter("author")));
+        System.out.println("book?id="+book.getId());
+        return "book?id="+book.getId();
+    }
+
     public void setBookService(BookService bookService) {
         this.bookService = bookService;
     }
