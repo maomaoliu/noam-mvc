@@ -11,7 +11,7 @@ repositories {
 
 def httpPort = 10190
 
-task jettyRun(gittype: JavaExec) {
+task jettyRun(type: JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     main 'com.thoughtworks.maomao.browser.WebServer'
     args httpPort, "src/test/webapp", "/noam-mvc"
