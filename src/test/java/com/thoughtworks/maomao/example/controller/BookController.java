@@ -3,7 +3,6 @@ package com.thoughtworks.maomao.example.controller;
 
 import com.thoughtworks.maomao.annotation.Controller;
 import com.thoughtworks.maomao.annotations.Glue;
-import com.thoughtworks.maomao.core.NoamController;
 import com.thoughtworks.maomao.example.model.Book;
 import com.thoughtworks.maomao.example.service.BookService;
 
@@ -13,36 +12,40 @@ import java.util.List;
 import java.util.Map;
 
 @Controller(model = Book.class)
-public class BookController extends NoamController {
+public class BookController{
 
     @Glue
     private BookService bookService;
 
-    @Override
-    public List index(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        return bookService.getAllBooks();
+    public void index(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        List books = bookService.getAllBooks();
+        params.put("books", books);
     }
 
-    @Override
-    public Book show(Integer id, HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        return bookService.getBook(id);
+    public void show(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Book book = bookService.getBook(id);
+        params.put("book", book);
     }
 
-    @Override
-    public void delete(Integer id, HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+    public String delete(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        int id = Integer.parseInt(req.getParameter("id"));
         bookService.deleteBook(id);
+        return "book?method=index";
     }
 
-    @Override
-    public Object create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        return new Book();
+    public void create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        Book book = new Book();
+        params.put("book", book);
     }
 
-    @Override
-    public String doSave(Object object) {
-        Book book = (Book) object;
+    public String createPost(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        System.out.println("CREATEPOST");
+        Book book = new Book();
+        book.setAuthor(req.getParameter("author"));
+        book.setName(req.getParameter("name"));
         book = bookService.addBook(book);
-        return "book?id="+book.getId();
+        return "book?method=show&id="+book.getId();
     }
 
     public void my(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {

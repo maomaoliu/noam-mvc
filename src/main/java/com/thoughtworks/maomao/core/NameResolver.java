@@ -24,18 +24,6 @@ public class NameResolver {
         return "/" + plural;
     }
 
-    public String getIndexView() {
-        return String.format("/%s/%s/index.stg", basePath, singular);
-    }
-
-    public String getShowView() {
-        return String.format("/%s/%s/show.stg", basePath, singular);
-    }
-
-    public String getCreateView() {
-        return String.format("/%s/%s/create.stg", basePath, singular);
-    }
-
     public String getView(String name){
         return String.format("/%s/%s/%s.stg", basePath, singular, name);
     }

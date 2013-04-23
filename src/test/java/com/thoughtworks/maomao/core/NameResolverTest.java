@@ -38,12 +38,7 @@ public class NameResolverTest {
 
     @Test
     public void should_get_index_view() {
-        assertEquals("/com/thoughtworks/maomao/example/view/book/index.stg", nameResolver.getIndexView());
-    }
-
-    @Test
-    public void should_get_show_view() {
-        assertEquals("/com/thoughtworks/maomao/example/view/book/show.stg", nameResolver.getShowView());
+        assertEquals("/com/thoughtworks/maomao/example/view/book/index.stg", nameResolver.getView("index"));
     }
 }
 

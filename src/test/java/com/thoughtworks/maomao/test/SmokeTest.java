@@ -6,6 +6,7 @@ import org.eclipse.jetty.client.api.ContentResponse;
 import org.junit.Test;
 
 import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class SmokeTest extends AbstractWebTest {
@@ -14,7 +15,7 @@ public class SmokeTest extends AbstractWebTest {
     public void should_get_books_info() throws Exception {
 
         ContentResponse response = client
-                .GET("http://localhost:11090/noam-mvc/books");
+                .GET("http://localhost:11090/noam-mvc/books?method=index");
 
         assertEquals(200, response.getStatus());
         assertNotNull(response.getContent());

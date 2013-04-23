@@ -3,7 +3,7 @@ noam-mvc
 
 ###CI
  
-[ci of noam-mvc](https://buildhive.cloudbees.com/job/maomaoliu/job/noam-mvc/)
+[ci of noam-mvc](https://travis-ci.org/maomaoliu/noam-mvc)
 
 ###第二挑战题目
 
