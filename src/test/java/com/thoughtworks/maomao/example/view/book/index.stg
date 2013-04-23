@@ -1,15 +1,16 @@
 <html>
     <body>
-        <div>
-            <ul>
+        <div class="add">
+             <a href="$contextPath$/book?method=create">Create</a>
+        </div>
+        <div class="list">
                 $books: { book |
-                    <div>
-                        <h2><a href="$contextPath$/book?id=$book.id$">$book.name$</a></h2>
-                        <h3>$book.author$</h3>
-                        <a href="$contextPath$/book?id=$book.id$&method=delete">Delete</a>
-                    </div>
+                    <ul>
+                        <li>Name: <a href="$contextPath$/book?id=$book.id$">$book.name$</a></li>
+                        <li>Author: $book.author$</li>
+                        <li><a href="$contextPath$/book?id=$book.id$&method=delete">Delete</a></li>
+                    </ul>
                 }$
-            </ul>
         </div>
     </body>
 </html>

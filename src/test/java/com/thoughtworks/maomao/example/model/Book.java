@@ -18,6 +18,18 @@ public class Book {
         this.author = author;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     public String getName() {
         return name;
     }

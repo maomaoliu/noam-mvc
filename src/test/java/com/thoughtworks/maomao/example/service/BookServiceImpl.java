@@ -28,15 +28,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBook(Book book) {
-        Integer id = 0;
-        while (books.keySet().contains(id)) {
-            id = (int) Math.random() * 10000;
-        }
-        books.put(id, book);
-    }
-
-    @Override
     public void updateBook(Book book) {
         books.put(book.getId(), book);
     }
@@ -52,7 +43,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book save(Book book) {
+    public Book addBook(Book book) {
         book.setId(books.size() + 1);
         books.put(book.getId(), book);
         return book;

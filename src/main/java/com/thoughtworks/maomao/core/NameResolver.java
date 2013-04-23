@@ -36,6 +36,10 @@ public class NameResolver {
         return String.format("/%s/%s/create.stg", basePath, singular);
     }
 
+    public String getView(String name){
+        return String.format("/%s/%s/%s.stg", basePath, singular, name);
+    }
+
     public String getSingular() {
         return singular;
     }

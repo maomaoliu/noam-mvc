@@ -1,8 +1,11 @@
 <html>
     <body>
         <div>
-            <h2>$book.name$</h2>
-            <h3>$book.author$</h3>
+            <a href="$contextPath$/books">Return to index.</a>
+        </div>
+        <div>
+            <h2>Name: $book.name$</h2>
+            <h3>Author: $book.author$</h3>
             <div></div>
             <ul>
                 $book.comments: { comment |

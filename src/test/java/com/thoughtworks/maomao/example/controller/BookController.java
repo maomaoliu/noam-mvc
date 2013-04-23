@@ -39,10 +39,14 @@ public class BookController extends NoamController {
     }
 
     @Override
-    public String doSave(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        Book book = bookService.save(new Book(req.getParameter("name"), req.getParameter("author")));
-        System.out.println("book?id="+book.getId());
+    public String doSave(Object object) {
+        Book book = (Book) object;
+        book = bookService.addBook(book);
         return "book?id="+book.getId();
+    }
+
+    public void my(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+        params.put("book_name", "GOOD NIGHT~");
     }
 
     public void setBookService(BookService bookService) {
