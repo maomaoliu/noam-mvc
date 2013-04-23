@@ -8,6 +8,8 @@
                     <ul>
                         <li>Name: <a href="$contextPath$/book?method=show&id=$book.id$">$book.name$</a></li>
                         <li>Author: $book.author$</li>
+                        <li>Comment: $book.comment.content$</li>
+                        <li>Added by: $book.comment.author$</li>
                         <li><a href="$contextPath$/book?id=$book.id$&method=delete">Delete</a></li>
                     </ul>
                 }$

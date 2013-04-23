@@ -40,10 +40,7 @@ public class BookController{
     }
 
     public String createPost(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        System.out.println("CREATEPOST");
-        Book book = new Book();
-        book.setAuthor(req.getParameter("author"));
-        book.setName(req.getParameter("name"));
+        Book book = (Book) params.get("book");
         book = bookService.addBook(book);
         return "book?method=show&id="+book.getId();
     }

@@ -6,12 +6,10 @@
         <div>
             <h2>Name: $book.name$</h2>
             <h3>Author: $book.author$</h3>
-            <div></div>
-            <ul>
-                $book.comments: { comment |
-                    <li>$comment.content$</li>
-                }$
-            </ul>
+            <div>
+                <p> Comment: $book.comment.content$</p>
+                <p> Add By: $book.comment.author$</p>
+            </div>
         </div>
     </body>
 </html>

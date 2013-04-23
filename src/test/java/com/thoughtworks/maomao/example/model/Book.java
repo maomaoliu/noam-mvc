@@ -1,12 +1,10 @@
 package com.thoughtworks.maomao.example.model;
 
-import java.util.List;
-
 public class Book {
     private Integer id;
     private String name;
     private String author;
-    private List<Comment> comments;
+    private Comment comment;
 
     public Book() {
         name = "";
@@ -26,10 +24,6 @@ public class Book {
         this.author = author;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
     public String getName() {
         return name;
     }
@@ -38,15 +32,20 @@ public class Book {
         return author;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        comment.setBook(this);
+        this.comment = comment;
     }
 }

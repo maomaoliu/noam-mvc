@@ -2,10 +2,12 @@
     <body>
         <div>
         <form action="book?method=create" method="post">
-            $book : {
-              Name: <input type="text" name="name" value="$book.name$"/>
-              Author: <input type="text" name="author" value="$book.author$"/>
-            }$
+
+              Name: <input type="text" name="book.name" value=""/>
+              Author: <input type="text" name="book.author" value=""/>
+
+              Comment: <input type="text" name="book.comment.content" value=""/>
+              Add by: <input type="text" name="book.comment.author" value=""/>
               <input type="submit" value="Submit">
         </form>
         </div>
