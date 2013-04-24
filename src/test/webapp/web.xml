@@ -10,6 +10,11 @@
         <param-value>com.thoughtworks.maomao.example</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>templateName</param-name>
+        <param-value>ST</param-value>
+    </context-param>
+
     <listener>
         <listener-class>com.thoughtworks.maomao.core.NoamServletContextListener</listener-class>
     </listener>

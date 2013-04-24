@@ -15,7 +15,7 @@ public class SmokeTest extends AbstractWebTest {
     public void should_get_books_info() throws Exception {
 
         ContentResponse response = client
-                .GET("http://localhost:11090/noam-mvc/books?method=index");
+                .GET("http://localhost:11090/noam-mvc/book?method=index");
 
         assertEquals(200, response.getStatus());
         assertNotNull(response.getContent());

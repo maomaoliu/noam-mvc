@@ -13,6 +13,7 @@ public class NoamServletContextListener implements ServletContextListener {
     public static final String WHEEL_CONTAINER = "wheel_container";
     public static final String WHEEL_SERVLET = "wheel_servlet";
     public static final String APP_PATH = "appPath";
+    public static final String TEMPLATE_NAME = "templateName";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {

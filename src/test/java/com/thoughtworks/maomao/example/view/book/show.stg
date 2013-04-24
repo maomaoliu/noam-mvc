@@ -1,7 +1,7 @@
 <html>
     <body>
         <div>
-            <a href="$contextPath$/books?method=index">Return to index.</a>
+            <a href="$contextPath$/book?method=index">Return to index.</a>
         </div>
         <div>
             <h2>Name: $book.name$</h2>

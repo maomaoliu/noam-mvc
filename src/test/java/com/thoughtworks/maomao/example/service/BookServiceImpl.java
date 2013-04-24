@@ -13,12 +13,13 @@ import java.util.Map;
 public class BookServiceImpl implements BookService {
 
     private static final Map<Integer, Book> books = new HashMap<Integer, Book>();
+    private static int next_id = 1;
 
     static {
         Book book1 = new Book("Hello World", "maomao");
         Book book2 = new Book("Funny MVC", "luliu");
-        book1.setId(1);
-        book2.setId(2);
+        book1.setId(next_id++);
+        book2.setId(next_id++);
         Comment comment1 = new Comment();
         comment1.setContent("Good book!");
         comment1.setAuthor("San Zhang");
@@ -53,7 +54,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book addBook(Book book) {
-        book.setId(books.size() + 1);
+        book.setId(next_id++);
         books.put(book.getId(), book);
         return book;
     }
