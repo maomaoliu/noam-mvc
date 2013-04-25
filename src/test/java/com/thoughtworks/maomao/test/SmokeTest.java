@@ -32,6 +32,21 @@ public class SmokeTest extends AbstractWebTest {
         }
     }
 
+@Test
+    public void should_delete_book() throws Exception {
+
+        ContentResponse response = client
+                .GET("http://localhost:11090/noam-mvc/book?id=2&method=delete");
+
+        assertEquals(200, response.getStatus());
+        assertNotNull(response.getContent());
+        List<Book> allBooks = new BookServiceImpl().getAllBooks();
+        for (Book book : allBooks) {
+            assertTrue(response.getContentAsString().contains(book.getName()));
+            assertTrue(response.getContentAsString().contains(book.getAuthor()));
+        }
+    }
+
     @Test
     public void should_post_book() throws Exception {
 
