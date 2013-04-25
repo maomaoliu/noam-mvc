@@ -10,8 +10,13 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 
 public class ModelAssembler {
 
+    public static final List<Class> PRIMITIVE_TYPES = Arrays.asList(new Class[]{
+            String.class, Integer.class, Short.class, Long.class,
+            Float.class, Double.class, Boolean.class, Character.class, Byte.class
+    });
+
     /**
-     *     Only support type like Integer instead of primitive type int.
+     * Only support type like Integer instead of primitive type int.
      */
     public <T> T assembleModel(Map<String, String[]> parameterMap, Class<T> modelClass) {
         T t = null;
@@ -98,7 +103,13 @@ public class ModelAssembler {
         return setterMethods;
     }
 
-    private <T> T parsePrimitiveType(String[] valueString, Class<T> valueType) {
+    public boolean isPrimitiveType(Class valueType) {
+        if (valueType.isArray()) return true;
+        if(PRIMITIVE_TYPES.contains(valueType)) return true;
+        return false;
+    }
+
+    public <T> T parsePrimitiveType(String[] valueString, Class<T> valueType) {
         try {
             if (valueType.isArray()) {
                 return (T) valueString;

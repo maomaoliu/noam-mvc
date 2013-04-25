@@ -7,6 +7,8 @@ import com.thoughtworks.maomao.example.controller.BookController;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+
 import static junit.framework.Assert.assertEquals;
 
 public class ControllerManagerTest {
@@ -21,8 +23,14 @@ public class ControllerManagerTest {
     }
 
     @Test
-    public void testDispatchController() throws Exception {
+    public void should_get_book_controller() throws Exception {
         Object bookController = controllerManager.dispatchController("/book");
         assertEquals(BookController.class, bookController.getClass());
+    }
+
+    @Test
+    public void should_get_index_method() throws NoSuchMethodException {
+        Method method = controllerManager.getMethod(BookController.class, "index");
+        assertEquals(BookController.class.getMethod("index"), method);
     }
 }

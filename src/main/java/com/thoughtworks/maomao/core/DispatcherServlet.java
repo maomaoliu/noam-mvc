@@ -1,8 +1,8 @@
 package com.thoughtworks.maomao.core;
 
-import com.thoughtworks.maomao.annotation.Controller;
 import com.thoughtworks.maomao.container.WheelContainer;
 import com.thoughtworks.maomao.core.controller.ControllerManager;
+import com.thoughtworks.maomao.core.controller.MethodInvoker;
 import com.thoughtworks.maomao.core.util.ModelAssembler;
 import com.thoughtworks.maomao.core.util.NameResolver;
 import com.thoughtworks.maomao.core.view.TemplateFactory;
@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DispatcherServlet extends HttpServlet {
     public static final String CONTEXT_PATH = "contextPath";
@@ -23,8 +23,8 @@ public class DispatcherServlet extends HttpServlet {
     private static final String GET = "GET";
     private static final String POST = "POST";
     private ControllerManager controllerManager;
+    private MethodInvoker methodInvoker;
     private NameResolver nameResolver;
-    private ModelAssembler modelAssembler;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -33,7 +33,7 @@ public class DispatcherServlet extends HttpServlet {
         controllerManager = new ControllerManager(wheelContainer);
         String appPath = config.getServletContext().getInitParameter(NoamServletContextListener.APP_PATH);
         nameResolver = new NameResolver(appPath);
-        modelAssembler = new ModelAssembler();
+        methodInvoker = new MethodInvoker(controllerManager);
     }
 
     @Override
@@ -66,10 +66,15 @@ public class DispatcherServlet extends HttpServlet {
     private void doGet(Object controller, Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) throws IOException {
         String methodName = req.getParameter("method");
         try {
-            Method method = controller.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class, Map.class);
-            method.invoke(controller, req, res, params);
-            String view = nameResolver.getView(controller, methodName);
-            render(view, res, params);
+            Object methodResult = methodInvoker.invokeMethod(controller, methodName, req);
+            if (isMap(methodResult)) {
+                params.putAll((Map<? extends String, ?>) methodResult);
+                String view = nameResolver.getView(controller, methodName);
+                render(view, res, params);
+            } else if (isString(methodResult)) {
+                String redirectURL = (String) methodResult;
+                res.sendRedirect(redirectURL);
+            }
         } catch (Exception e) {
             String errMsg = "Do GET failed.";
             res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, errMsg);
@@ -77,14 +82,12 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private void doPost(Object controller, Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String methodName = nameResolver.toPostName(req.getParameter("method"));
+        String methodName = NameResolver.toPostName(req.getParameter("method"));
         try {
-            Object model = modelAssembler.assembleModel(req.getParameterMap(), getModelClass(controller));
-            params.put(nameResolver.getInstanceName(getModelClass(controller)), model);
-            Method method = controller.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class, Map.class);
-            Object object = method.invoke(controller, req, res, params);
-            if (object != null && object.getClass() == String.class) {
-                String redirectURL = (String) object;
+            Object methodResult = methodInvoker.invokeMethod(controller, methodName, req);
+
+            if (isString(methodResult)) {
+                String redirectURL = (String) methodResult;
                 res.sendRedirect(redirectURL);
             }
         } catch (Exception e) {
@@ -99,9 +102,15 @@ public class DispatcherServlet extends HttpServlet {
         response.getOutputStream().write(viewTemplate.render(view, map).getBytes());
     }
 
-    private Class getModelClass(Object controller) {
-        Controller controllerAnnotation = (Controller) controller.getClass().getAnnotation(Controller.class);
-        return controllerAnnotation.model();
+
+    private boolean isMap(Object methodResult) {
+        if (methodResult == null) return false;
+        return Map.class.isAssignableFrom(methodResult.getClass());
+    }
+
+    private boolean isString(Object methodResult) {
+        if (methodResult == null) return false;
+        return methodResult.getClass().equals(String.class);
     }
 
 }

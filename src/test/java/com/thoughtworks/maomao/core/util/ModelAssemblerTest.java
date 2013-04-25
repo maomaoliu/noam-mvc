@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class ModelAssemblerTest {
 
@@ -109,6 +111,16 @@ public class ModelAssemblerTest {
         assertEquals(bookName, book.getName());
         assertEquals(commentContent, book.getComment().getContent());
         assertEquals(commentAuthor, book.getComment().getAuthor());
+    }
+
+    @Test
+    public void should_get_true() {
+        assertTrue(modelAssembler.isPrimitiveType(Integer.class));
+    }
+
+    @Test
+    public void should_get_false() {
+        assertFalse(modelAssembler.isPrimitiveType(Book.class));
     }
 
     private String[] getArray(String string) {

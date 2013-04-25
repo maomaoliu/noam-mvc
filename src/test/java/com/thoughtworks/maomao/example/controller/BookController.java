@@ -2,51 +2,56 @@ package com.thoughtworks.maomao.example.controller;
 
 
 import com.thoughtworks.maomao.annotation.Controller;
+import com.thoughtworks.maomao.annotation.Param;
 import com.thoughtworks.maomao.annotations.Glue;
 import com.thoughtworks.maomao.example.model.Book;
 import com.thoughtworks.maomao.example.service.BookService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller(model = Book.class)
+@Controller
 public class BookController{
 
     @Glue
     private BookService bookService;
 
-    public void index(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+    public Map index() {
         List books = bookService.getAllBooks();
-        params.put("books", books);
+        HashMap map = new HashMap();
+        map.put("books", books);
+        return map;
     }
 
-    public void show(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        int id = Integer.parseInt(req.getParameter("id"));
+    public Map show(@Param(value = "id") Integer id) {
         Book book = bookService.getBook(id);
-        params.put("book", book);
+        HashMap map = new HashMap();
+        map.put("book", book);
+        return map;
     }
 
-    public String delete(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        int id = Integer.parseInt(req.getParameter("id"));
+    public String delete(@Param(value = "id") Integer id) {
         bookService.deleteBook(id);
         return "book?method=index";
     }
 
-    public void create(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
+    public Map create() {
         Book book = new Book();
-        params.put("book", book);
+        HashMap map = new HashMap();
+        map.put("book", book);
+        return map;
     }
 
-    public String createPost(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        Book book = (Book) params.get("book");
+    public String createPost(@Param(value = "book") Book book) {
         book = bookService.addBook(book);
         return "book?method=show&id="+book.getId();
     }
 
-    public void my(HttpServletRequest req, HttpServletResponse resp, Map<String, Object> params) {
-        params.put("book_name", "GOOD NIGHT~");
+    public Map my() {
+        HashMap map = new HashMap();
+        map.put("book_name", "GOOD NIGHT~");
+        return map;
     }
 
     public void setBookService(BookService bookService) {

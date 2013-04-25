@@ -26,11 +26,10 @@ public class STViewTemplateTest {
     @Test
     public void should_render_template(){
         String stString = "My book's name is 'Who am I?'.";
-        System.out.println(stString);
         String view = "/com/thoughtworks/maomao/example/view/book/my";
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("book_name", "Who am I?");
-        String renderString = new String(stViewTemplate.render(view, map), Charsets.UTF_8);
+        String renderString = stViewTemplate.render(view, map);
         assertEquals(stString, renderString.trim());
     }
 }
