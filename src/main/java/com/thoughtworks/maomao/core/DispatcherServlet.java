@@ -96,7 +96,7 @@ public class DispatcherServlet extends HttpServlet {
     private void render(String view, HttpServletResponse response, Map<String, Object> map) throws IOException {
         String template = getServletContext().getInitParameter("templateName");
         ViewTemplate viewTemplate = TemplateFactory.getViewTemplate(template);
-        response.getOutputStream().write(viewTemplate.render(view, map));
+        response.getOutputStream().write(viewTemplate.render(view, map).getBytes());
     }
 
     private Class getModelClass(Object controller) {

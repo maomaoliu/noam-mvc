@@ -23,8 +23,8 @@ public class STViewTemplate extends ViewTemplate {
     }
 
     @Override
-    public byte[] render(String view, Map<String, Object> map) {
-        byte[] output = new byte[0];
+    public String render(String view, Map<String, Object> map) {
+        String outputString = "";
         String viewName = view + suffix;
         try {
             ST st = new ST(getFileString(viewName), '$', '$');
@@ -32,11 +32,11 @@ public class STViewTemplate extends ViewTemplate {
             for (Map.Entry<String, Object> entry : entries) {
                 st.add(entry.getKey(), entry.getValue());
             }
-            output = st.render().getBytes();
+            outputString = st.render();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return output;
+        return outputString;
     }
 
     private String getFileString(String viewName) throws IOException {
