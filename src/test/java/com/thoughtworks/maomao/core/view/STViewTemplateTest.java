@@ -1,6 +1,5 @@
 package com.thoughtworks.maomao.core.view;
 
-import com.google.common.base.Charsets;
 import org.junit.Before;
 import org.junit.Test;
 
