@@ -42,18 +42,7 @@ public class MethodInvoker {
 
     private Object invokeMethod(Object controller, Method method, List<Object> paramValues) throws InvocationTargetException, IllegalAccessException {
         int paramsNumber = method.getParameterTypes().length;
-        switch (paramsNumber) {
-            case 0:
-                return method.invoke(controller);
-            case 1:
-                return method.invoke(controller, paramValues.get(0));
-            case 2:
-                return method.invoke(controller, paramValues.get(0), paramValues.get(1));
-            case 3:
-                return method.invoke(controller, paramValues.get(0), paramValues.get(1), paramValues.get(2));
-            default:
-                throw new RuntimeException("Only support no more than 3 params now.");
-        }
+        return method.invoke(controller, paramValues.subList(0, paramsNumber).toArray());
     }
 
     private String getParameterValue(Annotation[] annotations, HttpServletRequest req) {
