@@ -1,5 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
+
+configurations {
+    deployerJars
+}
 
 repositories {
     mavenCentral()
@@ -15,6 +20,29 @@ task jettyRun(type: JavaExec) {
     classpath sourceSets.test.runtimeClasspath
     main 'com.thoughtworks.maomao.browser.WebServer'
     args httpPort, "src/test/webapp", "/noam-mvc"
+}
+
+task deploy {
+    dependsOn 'clean', 'uploadArchives'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourceJar
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        pom.groupId = 'noam'
+        pom.version = '0.11'
+        pom.artifactId = 'noam-mvc'
+        repository(url: "file://$buildDir/../../mvn-repo")
+    }
 }
 
 sourceSets.test.resources.srcDir 'src/test/java'
@@ -38,5 +66,6 @@ dependencies {
             'junit:junit:4.8.1',
             'org.mockito:mockito-all:1.9.0',
             'org.seleniumhq.selenium.fluent:fluent-selenium:1.6.3'
+    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
 }
 
