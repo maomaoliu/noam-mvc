@@ -54,10 +54,6 @@ sourceSets {
     }
 }
 
-task deploy {
-    dependsOn 'clean', 'uploadArchives'
-}
-
 dependencies {
     compile 'log4j:log4j:1.2.16',
             'com.google.guava:guava:14.0',
