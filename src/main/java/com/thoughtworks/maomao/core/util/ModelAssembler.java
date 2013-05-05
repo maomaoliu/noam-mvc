@@ -20,40 +20,56 @@ public class ModelAssembler {
      */
     public <T> T assembleModel(Map<String, String[]> parameterMap, Class<T> modelClass) {
         T t = null;
-
         try {
             t = modelClass.newInstance();
-            Set<Method> setterMethods = getSetterMethods(modelClass);
-            String prefix = NameResolver.getInstanceName(modelClass);
-            Set<String> keys = parameterMap.keySet();
+            try {
+                Set<Method> setterMethods = getSetterMethods(t.getClass());
+                String prefix = NameResolver.getInstanceName(t.getClass());
+                Set<String> keys = parameterMap.keySet();
 
-            List<String> subModels = new ArrayList<String>();
-            HashMap<String, String[]> subParameterMap = new HashMap<String, String[]>();
+                List<String> subModels = new ArrayList<String>();
+                HashMap<String, String[]> subParameterMap = new HashMap<String, String[]>();
 
-            for (String key : keys) {
-                String[] parts = key.split("\\.");
-                if (isPrimitiveType(prefix, parts)) {
-                    String expectedSetterName = getSetterByPropertyName(parts[1]);
-                    String[] valueStrings = parameterMap.get(key);
-                    invokeMethodIfPossible(t, expectedSetterName, valueStrings, setterMethods);
-                } else if (isComplexType(prefix, parts)) {
-                    if (!subModels.contains(parts[1])) {
-                        subModels.add(parts[1]);
+                for (String key : keys) {
+                    String[] parts = key.split("\\.");
+                    if (isPrimitiveType(prefix, parts)) {
+                        String expectedSetterName = getSetterByPropertyName(parts[1]);
+                        String[] valueStrings = parameterMap.get(key);
+                        invokeMethodIfPossible(t, expectedSetterName, valueStrings, setterMethods);
+                    } else if (isComplexType(prefix, parts)) {
+                        if (!subModels.contains(parts[1])) {
+                            subModels.add(parts[1]);
+                        }
+                        String newKey = getSubPrefix(prefix, key);
+                        subParameterMap.put(newKey, parameterMap.get(key));
                     }
-                    String newKey = getSubPrefix(prefix, key);
-                    subParameterMap.put(newKey, parameterMap.get(key));
                 }
-            }
 
-            for (String key : subModels) {
-                String expectedSetterName = getSetterByPropertyName(key);
-                invokeMethodIfPossible(t, expectedSetterName, subParameterMap, setterMethods);
+                for (String key : subModels) {
+                    String expectedSetterName = getSetterByPropertyName(key);
+                    invokeMethodIfPossible(t, expectedSetterName, subParameterMap, setterMethods);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return t;
+    }
+
+    public void assembleModel(Map<String, String> parameterMap, Object instance) {
+        try {
+            Set<Method> setterMethods = getSetterMethods(instance.getClass());
+            Set<String> keys = parameterMap.keySet();
+            for (String key : keys) {
+                String expectedSetterName = getSetterByPropertyName(key);
+                String valueString = parameterMap.get(key);
+                invokeMethodIfPossible(instance, expectedSetterName, new String[]{valueString}, setterMethods);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private <T> void invokeMethodIfPossible(T t, String expectedSetterName, String[] valueStrings, Set<Method> setterMethods) throws IllegalAccessException, InvocationTargetException {
@@ -105,7 +121,7 @@ public class ModelAssembler {
 
     public boolean isPrimitiveType(Class valueType) {
         if (valueType.isArray()) return true;
-        if(PRIMITIVE_TYPES.contains(valueType)) return true;
+        if (PRIMITIVE_TYPES.contains(valueType)) return true;
         return false;
     }
 
